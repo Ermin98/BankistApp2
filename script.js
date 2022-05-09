@@ -88,7 +88,7 @@ const createUsernames = function (accs) {
 createUsernames(accounts);
 
 // Displaying UI
-const displayUI = function () {
+const updateUI = function () {
   displayBalance(accounts);
   displayMovements(currentAccount.movements);
   displaySummary();
@@ -104,14 +104,13 @@ btnLogin.addEventListener('click', function (e) {
     account => account.username === inputLoginUsername.value
   );
   if (currentAccount.pin === Number(inputLoginPin.value)) {
-    console.log(currentAccount.pin);
     labelWelcome.textContent = `Welcome back, ${
       currentAccount.owner.split(' ')[0]
     }`;
   }
   inputLoginUsername.value = inputLoginPin.value = '';
   inputLoginPin.blur();
-  displayUI();
+  updateUI();
 });
 
 // Displaying balance
@@ -172,3 +171,24 @@ const displaySummary = function () {
 
   labelSumInterest.textContent = interest;
 };
+
+// Tranferring money
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const receiver = accounts.find(acc => acc.username === inputTransferTo.value);
+  const amount = Number(inputTransferAmount.value);
+
+  inputTransferTo.value = inputTransferAmount.value = '';
+
+  if (
+    receiver &&
+    receiver?.username !== currentAccount.username &&
+    amount > 0 &&
+    amount <= currentAccount.balance
+  ) {
+    receiver.movements.push(amount);
+    currentAccount.movements.push(-Math.abs(amount));
+    updateUI();
+  }
+});
