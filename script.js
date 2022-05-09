@@ -91,6 +91,7 @@ createUsernames(accounts);
 const displayUI = function () {
   displayBalance(accounts);
   displayMovements(currentAccount.movements);
+  displaySummary();
 };
 
 // Setting login and displaying the UI data
@@ -147,3 +148,27 @@ btnSort.addEventListener('click', function (e) {
   sorted = !sorted;
   console.log(sorted);
 });
+
+// Displaying summary
+
+const displaySummary = function () {
+  const income = currentAccount.movements
+    .filter(mov => mov > 0)
+    .reduce((sum, curr) => sum + curr);
+
+  labelSumIn.textContent = income;
+
+  const outcome = currentAccount.movements
+    .filter(mov => mov < 0)
+    .reduce((sum, curr) => sum + curr);
+
+  labelSumOut.textContent = outcome;
+
+  const interest = currentAccount.movements
+    .filter(mov => mov > 0)
+    .map(mov => (mov / 100) * currentAccount.interestRate)
+    .filter(mov => mov > 1)
+    .reduce((sum, curr) => sum + curr);
+
+  labelSumInterest.textContent = interest;
+};
