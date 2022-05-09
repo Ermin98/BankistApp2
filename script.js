@@ -188,7 +188,22 @@ btnTransfer.addEventListener('click', function (e) {
     amount <= currentAccount.balance
   ) {
     receiver.movements.push(amount);
-    currentAccount.movements.push(-Math.abs(amount));
+    currentAccount.movements.push(-amount);
+    updateUI();
+  }
+});
+
+// Requesting loan
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  inputLoanAmount.value = '';
+  if (
+    amount &&
+    amount > 0 &&
+    currentAccount.movements.some(mov => mov >= amount * 0.1)
+  ) {
+    currentAccount.movements.push(amount);
     updateUI();
   }
 });
