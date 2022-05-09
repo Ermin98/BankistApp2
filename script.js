@@ -76,7 +76,6 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /////////////////////////////////////////////////
 
 // Creating usernames
-
 const createUsernames = function (accs) {
   accs.forEach(acc => {
     acc.username = acc.owner
@@ -87,3 +86,64 @@ const createUsernames = function (accs) {
   });
 };
 createUsernames(accounts);
+
+// Displaying UI
+const displayUI = function () {
+  displayBalance(accounts);
+  displayMovements(currentAccount.movements);
+};
+
+// Setting login and displaying the UI data
+let currentAccount;
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  containerApp.style.opacity = 1;
+  currentAccount = accounts.find(
+    account => account.username === inputLoginUsername.value
+  );
+  if (currentAccount.pin === Number(inputLoginPin.value)) {
+    console.log(currentAccount.pin);
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+  }
+  inputLoginUsername.value = inputLoginPin.value = '';
+  inputLoginPin.blur();
+  displayUI();
+});
+
+// Displaying balance
+const displayBalance = function (accs) {
+  accs.forEach(acc => {
+    acc.balance = acc.movements.reduce((prev, curr) => prev + curr, 0);
+  });
+  labelBalance.textContent = currentAccount.balance;
+};
+
+// Displaying Movements
+const displayMovements = function (movements, sort = false) {
+  containerMovements.textContent = '';
+
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(mov => {
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const html = `<div class="movements__row">
+                  <div class="movements__type movements__type--${type}">2 ${type}</div>
+                  <div class="movements__date">3 days ago</div>
+                  <div class="movements__value">${mov} €</div>
+                  </div>`;
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+
+// Sorting movements
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault;
+  displayMovements(currentAccount.movements, (sorted = !sorted));
+  sorted = !sorted;
+  console.log(sorted);
+});
