@@ -206,4 +206,21 @@ btnLoan.addEventListener('click', function (e) {
     currentAccount.movements.push(amount);
     updateUI();
   }
+  inputLoanAmount.blur();
+});
+
+// Closing account
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (
+    currentAccount.username === inputCloseUsername.value &&
+    currentAccount.pin === Number(inputClosePin.value)
+  ) {
+    const index = accounts.findIndex(acc => acc === currentAccount);
+    console.log(index);
+    accounts.splice(index, 1);
+    containerApp.style.opacity = 0;
+  }
+  inputCloseUsername.value = inputClosePin.value = '';
+  inputClosePin.blur();
 });
